@@ -20,6 +20,7 @@ public class User {
 
     private String username;
     private String password;
-    @ManyToMany
+    private String email;
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Product> cart;
 }

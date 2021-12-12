@@ -7,9 +7,13 @@
 </head>
 <body>
 <div class="container mt-3 w-50 p-3">
-    <h2>Welcome</h2>
+    <h2>Register</h2>
     <hr/>
-    <form th:action="@{/checkLogin}" th:object="${user}" method="POST">
+    <form th:action="@{/registerUser}" th:object="${user}" method="POST">
+        <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="text" class="form-control" th:field="*{email}" aria-describedby="password">
+        </div>
         <div class="mb-3">
             <label class="form-label">Username</label>
             <input type="text" class="form-control" th:field="*{username}" aria-describedby="username">
@@ -17,12 +21,8 @@
         <div class="mb-3">
             <label class="form-label">Password</label>
             <input type="password" class="form-control" th:field="*{password}" aria-describedby="password">
-            <div class="form-text text-danger" th:if="${invalidCredentials}">Incorrect username or password. Please try again.</div>
         </div>
-        <button type="submit" class="btn btn-primary">Login</button>
-        <hr/>
-        <div class="form-text">Don't have an account ? Register Now</div>
-        <a class="btn btn-outline-dark mt-2" th:href="@{/register}">Register</a>
+        <button type="submit" class="btn btn-primary">Save</button>
     </form>
 </div>
 </body>

@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -21,4 +22,5 @@ public class Product {
     private Double price;
     @Lob
     private byte[] picture;
+
 }

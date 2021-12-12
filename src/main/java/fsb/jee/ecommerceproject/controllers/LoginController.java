@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.List;
 import java.util.Objects;
@@ -17,6 +19,7 @@ public class LoginController {
     @Autowired
     private UserRepository userRepository;
     Boolean invalidCredentials;
+    Boolean verifyPwd;
 
     @GetMapping({"/","/login","/welcome"})
     public ModelAndView loadWelcomePage(){
@@ -29,15 +32,20 @@ public class LoginController {
     }
 
     @PostMapping("/checkLogin")
-    public Object login(@ModelAttribute User user){
+    public Object login(@ModelAttribute User user, RedirectAttributes redir){
         List<User> users = userRepository.findAll();
-        User admin = new User();
+        /*User admin = new User();
+        admin.setId(1L);
         admin.setUsername("admin");
         admin.setPassword("admin");
         users.add(admin);
+        userRepository.save(admin);*/
+        System.out.println(users);
         for (User u : users){
             if(Objects.equals(u.getUsername(), user.getUsername()) && Objects.equals(u.getPassword(), user.getPassword())){
-                return "redirect:products";
+                RedirectView redirectView= new RedirectView("/loadProducts",true);
+                redir.addFlashAttribute("user",u);
+                return redirectView;
             }
         }
         ModelAndView mav = new ModelAndView("index");
@@ -45,4 +53,6 @@ public class LoginController {
         mav.addObject("invalidCredentials", invalidCredentials);
         return mav;
     }
+
+
 }
