@@ -10,7 +10,19 @@
 
 <body>
 <div class="container mt-3">
-    <h2>Products</h2>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-auto"><h2>Products</h2></div>
+            <div class="col"></div>
+            <div class="col-md-auto">
+                <select class="form-select" aria-label="select action">
+                    <option hidden selected>User</option>
+                    <option value="1">Cart</option>
+                    <option value="2">Logout</option>
+                </select>
+            </div>
+        </div>
+    </div>
     <hr/>
     <a th:href="@{/addProduct}" class="btn btn-dark mb-4">Add</a>
     <table class="table" id="productTable">
@@ -32,7 +44,8 @@
             <td th:text="${product.price}"></td>
             <td></td>
             <td>
-                <a th:href="@{/UpdateProductForm(productId=${product.id})}"  class="btn btn-secondary">Edit</a>
+                <a class="btn btn-success">Add to Cart</a>
+                <a th:href="@{/UpdateProductForm(productId=${product.id})}"  class="btn btn-secondary ml-2">Edit</a>
                 <a th:href="@{/DeleteProduct(productId=${product.id})}" class="btn btn-danger ml-2">Delete</a>
             </td>
         </tr>
