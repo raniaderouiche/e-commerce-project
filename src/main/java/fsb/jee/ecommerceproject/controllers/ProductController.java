@@ -93,6 +93,10 @@ public class ProductController {
 
     @GetMapping("/DeleteProduct")
     public String deleteProduct(@RequestParam Long productId) {
+        Product product = productRepository.findById(productId).get();
+        loggedInUser = userRepository.findById(loggedInUser.getId()).get();
+        loggedInUser.getCart().remove(product);
+        userRepository.save(loggedInUser);
         productRepository.deleteById(productId);
         return "redirect:/products";
     }
@@ -100,6 +104,7 @@ public class ProductController {
     @GetMapping("/AddProductToCart")
     public String addToCart(@RequestParam Long productId){
         Product product = productRepository.findById(productId).get();
+        loggedInUser = userRepository.findById(loggedInUser.getId()).get();
         List<Product> cart = loggedInUser.getCart();
         Boolean found = false;
         for(Product p : cart){
@@ -115,11 +120,13 @@ public class ProductController {
         }
         return "redirect:/products";
     }
-/*----------------------------------------------cart---------------------------------------------*/
+
+    /*----------------------------------------------cart---------------------------------------------*/
     //load cart
     @GetMapping("/cart")
     public ModelAndView getCart(){
         ModelAndView mav = new ModelAndView("cart-list");
+        loggedInUser = userRepository.findById(loggedInUser.getId()).get();
         List<Product> productList = loggedInUser.getCart();
         Double total = 0.0;
         for (Product p : productList) {
@@ -134,6 +141,7 @@ public class ProductController {
     @GetMapping("/RemoveProductFromCart")
     public String removeProduct(@RequestParam Long productId) {
         Product product = productRepository.findById(productId).get();
+        loggedInUser = userRepository.findById(loggedInUser.getId()).get();
         List<Product> cart = loggedInUser.getCart();
         Boolean found = false;
         for(Product p : cart){
