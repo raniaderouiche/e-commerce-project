@@ -19,7 +19,6 @@ public class LoginController {
     @Autowired
     private UserRepository userRepository;
     Boolean invalidCredentials;
-    Boolean verifyPwd;
 
     @GetMapping({"/","/login","/welcome"})
     public ModelAndView loadWelcomePage(){
@@ -34,13 +33,6 @@ public class LoginController {
     @PostMapping("/checkLogin")
     public Object login(@ModelAttribute User user, RedirectAttributes redir){
         List<User> users = userRepository.findAll();
-        /*User admin = new User();
-        admin.setId(1L);
-        admin.setUsername("admin");
-        admin.setPassword("admin");
-        users.add(admin);
-        userRepository.save(admin);*/
-        System.out.println(users);
         for (User u : users){
             if(Objects.equals(u.getUsername(), user.getUsername()) && Objects.equals(u.getPassword(), user.getPassword())){
                 RedirectView redirectView= new RedirectView("/loadProducts",true);

@@ -9,23 +9,35 @@
 <div class="container mt-3 w-50 p-3">
     <h2>Add Product</h2>
     <hr/>
-    <form th:action="@{/saveProduct}" th:object="${product}" method="POST">
+    <form th:action="@{/saveProduct}" method="POST" enctype="multipart/form-data">
+
         <div class="mb-3">
-            <label class="form-label">Name</label>
-            <input type="text" class="form-control" th:field="*{name}" aria-describedby="name">
+            <label for="formFile" class="form-label">Product Picture</label>
+            <div>
+                <div class="input-group">
+                    <input type="file" name="file" class="form-control" id="formFile" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
+                    <button class="btn btn-outline-secondary" type="button" id="inputGroupFileAddon">Reset</button>
+                </div>
+                <div class=" small mt-1">Allowed JPEG or PNG. Max size of 800K</div>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" for="namefield">Name</label>
+            <input type="text" id="namefield" class="form-control" name="name" aria-describedby="name">
         </div>
         <div class="mb-3">
-            <label class="form-label">Description</label>
-            <textarea class="form-control" th:field="*{description}"  rows="3"></textarea>
+            <label for="descfield" class="form-label">Description</label>
+            <textarea id="descfield" class="form-control" name="description"  rows="3"></textarea>
         </div>
-        <label class="form-label">Price</label>
+        <label for="pricefield" class="form-label">Price</label>
         <div class="input-group mb-3">
-            <span class="input-group-text">$</span>
-            <input type="text" class="form-control" th:field="*{price}" aria-label="Amount (to the nearest dollar)">
+            <span class="input-group-text">TND</span>
+            <input type="text" ID="pricefield" class="form-control" name="price" aria-label="Amount (to the nearest dollar)">
             <span class="input-group-text">.00</span>
         </div>
         <button type="submit" class="btn btn-primary">Save</button>
-        <input type="hidden" th:field="*{id}">
+
     </form>
     <hr/>
     <a th:href="@{/products}" class="btn btn-secondary">Back to Product list</a>

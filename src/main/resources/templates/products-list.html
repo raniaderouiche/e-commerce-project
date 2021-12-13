@@ -22,44 +22,48 @@
     </div>
     <hr/>
     <a th:href="@{/addProduct}" class="btn btn-dark mb-4">Add</a>
-    <table class="table" id="productTable">
-        <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Name</th>
-            <th scope="col">Description</th>
-            <th scope="col">Price</th>
-            <th scope="col">Image</th>
-            <th scope="col">Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="product: ${products}">
-            <th scope="row" th:text="${product.id}"></th>
-            <td th:text="${product.name}"></td>
-            <td th:text="${product.description}"></td>
-            <td th:text="${product.price}"></td>
-            <td></td>
-            <td>
-                <a th:href="@{/AddProductToCart(productId=${product.id})}" class="btn btn-success">Add to Cart</a>
-                <a th:href="@{/UpdateProductForm(productId=${product.id})}"  class="btn btn-secondary ml-2">Edit</a>
-                <a th:href="@{/DeleteProduct(productId=${product.id})}" class="btn btn-danger ml-2">Delete</a>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+    <div class="container">
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" id="myFilter" onkeyup="search()" placeholder="Search Products.." aria-label="Search Products.." aria-describedby="button-addon2">
+        </div>
+        <div class="row row-cols-1 row-cols-md-4 g-4" id="myProducts">
+            <div class="col" th:each="p: ${products}" >
+                <div class="card h-100">
+                    <div class="card-body">
+                        <img th:src="*{'data:image/jpeg;base64,'+{p.picture}}" style="width: 100%; height: auto" class="card-img-top" alt="...">
+                        <h5 class="card-title">[[*{p.name}]]</h5>
+                        <p class="card-text">[[*{p.description}]]</p>
+                    </div>
+                    <div class="card-footer">
+                        <small class="text-muted">[[${p.price}]] TND</small>
+                        <div style="float: right;">
+                            <a th:href="@{/UpdateProductForm(productId=${p.id})}"  class="btn btn-secondary ml-2">Edit</a>
+                            <a th:href="@{/DeleteProduct(productId=${p.id})}" class="btn btn-danger ml-2">Delete</a>
+                            <a th:href="@{/AddProductToCart(productId=${p.id})}" class="btn btn-success">Add to Cart</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/v/bs5/dt-1.11.3/datatables.min.js"></script>
-<script>
-    $(document).ready(function() {
-        $("#productTable").DataTable({
-            'aoColumnDefs': [{
-                'bSortable': false,
-                'aTargets': [-1] /* 1st one, start by the right */
-            }]
-        });
-    })
+<script>function search() {
+    var input, filter, cards, cardContainer, title, i;
+    input = document.getElementById("myFilter");
+    filter = input.value.toUpperCase();
+    cardContainer = document.getElementById("myProducts");
+    cards = cardContainer.getElementsByClassName("col");
+    for (i = 0; i < cards.length; i++) {
+        title = cards[i].querySelector(".card-title");
+        if (title.innerText.toUpperCase().indexOf(filter) > -1) {
+            cards[i].style.display = "";
+
+        } else {
+            cards[i].style.display = "none";
+        }
+    }
+}
 </script>
 </body>
 </html>

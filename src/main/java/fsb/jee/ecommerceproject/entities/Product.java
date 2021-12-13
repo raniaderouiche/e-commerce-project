@@ -21,6 +21,6 @@ public class Product {
     private String description;
     private Double price;
     @Lob
-    private byte[] picture;
+    private String picture;
 
 }

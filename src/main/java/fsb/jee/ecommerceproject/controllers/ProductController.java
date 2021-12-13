@@ -4,11 +4,15 @@ import fsb.jee.ecommerceproject.entities.Product;
 import fsb.jee.ecommerceproject.entities.User;
 import fsb.jee.ecommerceproject.repositories.ProductRepository;
 import fsb.jee.ecommerceproject.repositories.UserRepository;
+import fsb.jee.ecommerceproject.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
 
@@ -17,6 +21,9 @@ public class ProductController {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private ProductService productService;
     @Autowired
     private UserRepository userRepository;
     private User loggedInUser;
@@ -24,7 +31,6 @@ public class ProductController {
     @GetMapping("/loadProducts")
     public ModelAndView initProducts(@ModelAttribute User user){
         ModelAndView mav = new ModelAndView("products-list");
-        System.out.println(user);
         loggedInUser = userRepository.findById(user.getId()).get();
         List<Product> productList = productRepository.findAll();
         mav.addObject("products", productList);
@@ -49,14 +55,37 @@ public class ProductController {
     }
 
     @PostMapping("/saveProduct")
-    public String saveProduct(@ModelAttribute Product product){
+    public String saveProduct(@RequestParam("file") MultipartFile file,
+                              @RequestParam("name") String name,
+                              @RequestParam("description") String description,
+                              @RequestParam("price") Double price){
+
+        productService.saveProductToDB(file,name,description,price);
+        return "redirect:/products";
+    }
+
+    @PostMapping("/updateProduct")
+    public String updateProduct(@ModelAttribute() Product product, @RequestParam("file") MultipartFile file){
+        if(file.isEmpty()){
+            product.setPicture(productRepository.findById(product.getId()).get().getPicture());
+        }else{
+            String filename = StringUtils.cleanPath(file.getOriginalFilename());
+            if (filename.contains("..")){
+                System.out.println("not a valid file");
+            }
+            try{
+                product.setPicture(Base64.getEncoder().encodeToString(file.getBytes()));
+            }catch (Exception e){
+                System.out.println(e.getMessage());
+            }
+        }
         productRepository.save(product);
         return "redirect:/products";
     }
 
     @GetMapping("/UpdateProductForm")
     public ModelAndView UpdateProductForm(@RequestParam Long productId){
-        ModelAndView mav = new ModelAndView("add-product");
+        ModelAndView mav = new ModelAndView("update-product");
         Product product = productRepository.findById(productId).get();
         mav.addObject("product", product);
         return mav;
@@ -71,7 +100,6 @@ public class ProductController {
     @GetMapping("/AddProductToCart")
     public String addToCart(@RequestParam Long productId){
         Product product = productRepository.findById(productId).get();
-        System.out.println(loggedInUser);
         List<Product> cart = loggedInUser.getCart();
         Boolean found = false;
         for(Product p : cart){
@@ -84,7 +112,6 @@ public class ProductController {
             cart.add(product);
             loggedInUser.setCart(cart);
             userRepository.save(loggedInUser);
-            System.out.println(loggedInUser);
         }
         return "redirect:/products";
     }
@@ -119,7 +146,6 @@ public class ProductController {
             cart.remove(product);
             loggedInUser.setCart(cart);
             userRepository.save(loggedInUser);
-            System.out.println(loggedInUser);
         }
         return "redirect:/cart";
     }

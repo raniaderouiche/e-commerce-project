@@ -37,7 +37,8 @@
             <td th:text="${product.name}"></td>
             <td th:text="${product.description}"></td>
             <td th:text="${product.price}"></td>
-            <td></td>
+            <td><img th:src="*{'data:image/jpeg;base64,'+{product.picture}}" style="width: 50px; height: 50px" class="card-img-top" alt="...">
+            </td>
             <td>
                 <a th:href="@{/RemoveProductFromCart(productId=${product.id})}" class="btn btn-danger ml-2">Remove</a>
             </td>
