@@ -133,7 +133,7 @@
         <div class="form-group mb-3">
             <input type="password" id="password-field" class="form-control" th:field="*{password}" placeholder="Password" required>
             <span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span>
-            <div class="form-text text-danger" hidden th:if="${invalidCredentials}">Incorrect username or password. Please try again.</div>
+            <div class="form-text text-danger" th:if="${invalidCredentials}">Incorrect username or password. Please try again.</div>
         </div>
         <div class="form-group">
             <button type="submit" class="form-control btn submit px-3">Login</button>
@@ -148,6 +148,7 @@
 </section>
 </body>
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 <script th:inline="javascript">
     (function($) {
