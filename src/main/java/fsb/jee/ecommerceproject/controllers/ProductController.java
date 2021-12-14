@@ -94,9 +94,15 @@ public class ProductController {
     @GetMapping("/DeleteProduct")
     public String deleteProduct(@RequestParam Long productId) {
         Product product = productRepository.findById(productId).get();
+        //loggedInUser = userRepository.findById(loggedInUser.getId()).get();
+        //loggedInUser.getCart().remove(product);
+        List<User> users = userRepository.findAll();
+        for(User u : users){
+            u.getCart().remove(product);
+            userRepository.save(u);
+        }
+        //userRepository.save(loggedInUser);
         loggedInUser = userRepository.findById(loggedInUser.getId()).get();
-        loggedInUser.getCart().remove(product);
-        userRepository.save(loggedInUser);
         productRepository.deleteById(productId);
         return "redirect:/products";
     }
